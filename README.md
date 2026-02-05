@@ -44,6 +44,9 @@ The script is based on a complete rewrite of rinsuki's [musicdb2sqlite](https://
 As mentioned, [musicdb2sqlite](https://github.com/rinsuki/musicdb2sqlite) is a similar project that 
 will convert a `musicdb` file to an SQLite database, which can then dump to JSON or XML.
 
+[AppMusicLibParser](https://github.com/pitetb/AppMusicLibParser) is a newer project with a command-line tool
+as well as export functionality.
+
 For iTunes `.itl` file parsing there exist older projects:
  - [titl](https://github.com/josephw/titl), which allows reading and modification of `itl` files.
  - Another script [extracts playlists from `itl` files](https://gist.github.com/jeamland/c856e9993008c9611a9910a3b22f9479).
