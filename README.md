@@ -26,6 +26,59 @@ playlist data. JSON key names aim to be consistent with the iTunes XML key names
 Sadly the XML "Track ID" property does not seem to be present in the musicdb file, but the "Persistent ID"s are
 the same in this JSON the standard XML exports.
 
+## Restoring the Library via Apple Music API
+
+This repository also includes `restore_library.py`, a separate CLI that consumes an extracted
+`library.json` and rebuilds the library in Apple Music using the Apple Music API.
+
+The restore flow has three stages:
+
+1. Install dependencies:
+
+```shell
+pip install -r requirements.txt
+```
+
+2. Capture Apple Music credentials:
+
+```shell
+python restore_library.py auth \
+  --team-id YOUR_TEAM_ID \
+  --key-id YOUR_MUSICKIT_KEY_ID \
+  --private-key-file /path/to/AuthKey_KEYID.p8
+```
+
+This launches a local web page, opens Apple Music authorization in the browser, and saves the
+Music User Token plus metadata to `.apple_music_restore.json`.
+
+3. Preview matching quality before writing anything:
+
+```shell
+python restore_library.py plan library.json
+```
+
+This writes a detailed `restore_report.json` with the catalog match chosen for each track.
+
+4. Restore the library and playlists:
+
+```shell
+python restore_library.py restore library.json
+```
+
+Useful options:
+
+- `--dry-run`: run the restore command without modifying Apple Music.
+- `--include-system-playlists`: also recreate likely Apple-generated playlists such as Favorites.
+- `--include-empty-playlists`: also recreate empty playlists.
+- `--request-delay`: slow the catalog search loop down if Apple starts rate-limiting requests.
+
+### Important limitations
+
+- The extracted `library.json` does not contain stable Apple Music catalog IDs, so restoration is
+  based on best-effort matching by track title, artist, album, duration, and year.
+- Ratings, play counts, skip counts, and historical timestamps are not restored by this tool.
+- Playlist recreation is based on the successfully matched tracks only.
+
 Further arguments are provided to output to a different filename or to output the raw decrypted
 and decompressed bytes for further investigation.
 
